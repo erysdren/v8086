@@ -37,6 +37,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/*
+ * macros
+ */
+
+/* get specific bit from integer */
+#define BIT(i, b) (((i) & (1 << (b))) >> (b))
+
+/*
+ * function declarations
+ */
+
 void error(char *s);
 void warn(char *s);
 void *load(char *filename, int *buffer_len);

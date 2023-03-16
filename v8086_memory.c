@@ -44,79 +44,66 @@ SOFTWARE.
 /* std */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* v8086 */
-#include "v8086.h"
 #include "utils.h"
+#include "v8086.h"
 
 /*
- * error
+ * macros
  */
 
-void error(char *s)
-{
-	fprintf(stderr, "error: %s\n", s);
-	exit(1);
-}
+/* get register */
+#define REGS(i) v8086.regs[i]
+
+/* main registers */
+#define REG_AX REGS(0)
+#define REG_BX REGS(1)
+#define REG_CX REGS(2)
+#define REG_DX REGS(3)
+
+/* index registers */
+#define REG_SI REGS(4)
+#define REG_DI REGS(5)
+#define REG_BP REGS(6)
+#define REG_SP REGS(7)
+
+/* program counter */
+#define REG_IP REGS(8)
+
+/* segment registers */
+#define REG_CS REGS(9)
+#define REG_DS REGS(10)
+#define REG_ES REGS(11)
+#define REG_SS REGS(12)
+
+/* status register */
+#define FLAGS REGS(13)
+
+/* flags */
+#define FLAG_C BIT(FLAGS, 0)
+#define FLAG_P BIT(FLAGS, 2)
+#define FLAG_A BIT(FLAGS, 4)
+#define FLAG_Z BIT(FLAGS, 6)
+#define FLAG_S BIT(FLAGS, 7)
+#define FLAG_T BIT(FLAGS, 8)
+#define FLAG_I BIT(FLAGS, 9)
+#define FLAG_D BIT(FLAGS, 10)
+#define FLAG_O BIT(FLAGS, 11)
 
 /*
- * warn
+ * memory
  */
 
-void warn(char *s)
+struct
 {
-	fprintf(stderr, "warning: %s\n", s);
-}
 
-/*
- * load
- */
+	/* 640k ought to be enough for anybody */
+	u8 mem[0xA0000];
 
-void *load(char *filename, int *buffer_len)
-{
-	/* variables */
-	FILE *file;
-	u32 filelen;
-	void *filebuffer;
+	/* registers */
+	u16 regs[14];
 
-	/* open ifle */
-	file = fopen(filename, "rb");
-	if (!file) return NULL;
+} v8086;
 
-	/* get file size */
-	fseek(file, 0, SEEK_END);
-	filelen = ftell(file);
-	fseek(file, 0, SEEK_SET);
-
-	/* allocate memory */
-	filebuffer = malloc(filelen);
-	if (!filebuffer) return NULL;
-
-	/* read in file */
-	fread(filebuffer, filelen, 1, file);
-
-	/* close file */
-	fclose(file);
-
-	/* return ptr and len */
-	if (buffer_len) *buffer_len = filelen;
-	return filebuffer;
-}
-
-/*
- * print
- */
-
-void print(char *string, char terminator, FILE *stream)
-{
-	char *pointer;
-
-	pointer = string;
-	while (*pointer != terminator)
-	{
-		fwrite(pointer, sizeof(char), 1, stream);
-		pointer++;
-	}
-
-	fflush(stream);
-}

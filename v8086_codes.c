@@ -44,79 +44,14 @@ SOFTWARE.
 /* std */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* v8086 */
-#include "v8086.h"
 #include "utils.h"
+#include "v8086.h"
 
 /*
- * error
+ * instructions
  */
 
-void error(char *s)
-{
-	fprintf(stderr, "error: %s\n", s);
-	exit(1);
-}
 
-/*
- * warn
- */
-
-void warn(char *s)
-{
-	fprintf(stderr, "warning: %s\n", s);
-}
-
-/*
- * load
- */
-
-void *load(char *filename, int *buffer_len)
-{
-	/* variables */
-	FILE *file;
-	u32 filelen;
-	void *filebuffer;
-
-	/* open ifle */
-	file = fopen(filename, "rb");
-	if (!file) return NULL;
-
-	/* get file size */
-	fseek(file, 0, SEEK_END);
-	filelen = ftell(file);
-	fseek(file, 0, SEEK_SET);
-
-	/* allocate memory */
-	filebuffer = malloc(filelen);
-	if (!filebuffer) return NULL;
-
-	/* read in file */
-	fread(filebuffer, filelen, 1, file);
-
-	/* close file */
-	fclose(file);
-
-	/* return ptr and len */
-	if (buffer_len) *buffer_len = filelen;
-	return filebuffer;
-}
-
-/*
- * print
- */
-
-void print(char *string, char terminator, FILE *stream)
-{
-	char *pointer;
-
-	pointer = string;
-	while (*pointer != terminator)
-	{
-		fwrite(pointer, sizeof(char), 1, stream);
-		pointer++;
-	}
-
-	fflush(stream);
-}
