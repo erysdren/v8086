@@ -1,0 +1,10 @@
+
+dosbox-x.conf
+dosbox-x.sh
+
+*.exe
+v8086
+
+.vscode/
+*.code-workspace
+
