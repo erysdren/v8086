@@ -37,7 +37,7 @@
 # SOFTWARE.
 # 
 
-SRC_C = main.c v8086.c utils.c
+SRC_C = v8086_memory.c utils.c
 SRC_ASM = hello.asm
 
 CFLAGS += -std=c89 -pedantic

@@ -54,43 +54,54 @@ SOFTWARE.
  * macros
  */
 
-/* get register */
-#define REGS(i) v8086.regs[i]
+/* get 8-bit register */
+#define REG8(i) v8086.regs[i]
+
+/* get 16-bit register */
+#define REG16(i) *(u16 *)&v8086.regs[i]
 
 /* main registers */
-#define REG_AX REGS(0)
-#define REG_BX REGS(1)
-#define REG_CX REGS(2)
-#define REG_DX REGS(3)
+#define REG_AX REG16(0)
+#define REG_AH REG8(0)
+#define REG_AL REG8(1)
+#define REG_BX REG16(2)
+#define REG_BH REG8(2)
+#define REG_BL REG8(3)
+#define REG_CX REG16(4)
+#define REG_CH REG8(4)
+#define REG_CL REG8(5)
+#define REG_DX REG16(6)
+#define REG_DH REG8(6)
+#define REG_DL REG8(7)
 
 /* index registers */
-#define REG_SI REGS(4)
-#define REG_DI REGS(5)
-#define REG_BP REGS(6)
-#define REG_SP REGS(7)
+#define REG_SI REG16(8)
+#define REG_DI REG16(10)
+#define REG_BP REG16(12)
+#define REG_SP REG16(14)
 
 /* program counter */
-#define REG_IP REGS(8)
+#define REG_IP REG16(16)
 
 /* segment registers */
-#define REG_CS REGS(9)
-#define REG_DS REGS(10)
-#define REG_ES REGS(11)
-#define REG_SS REGS(12)
+#define REG_CS REG16(18)
+#define REG_DS REG16(20)
+#define REG_ES REG16(22)
+#define REG_SS REG16(24)
 
 /* status register */
-#define FLAGS REGS(13)
+#define FLAGS REG16(26)
 
 /* flags */
-#define FLAG_C BIT(FLAGS, 0)
-#define FLAG_P BIT(FLAGS, 2)
-#define FLAG_A BIT(FLAGS, 4)
-#define FLAG_Z BIT(FLAGS, 6)
-#define FLAG_S BIT(FLAGS, 7)
-#define FLAG_T BIT(FLAGS, 8)
-#define FLAG_I BIT(FLAGS, 9)
-#define FLAG_D BIT(FLAGS, 10)
-#define FLAG_O BIT(FLAGS, 11)
+#define FLAG_C GETBIT(FLAGS, 0)
+#define FLAG_P GETBIT(FLAGS, 2)
+#define FLAG_A GETBIT(FLAGS, 4)
+#define FLAG_Z GETBIT(FLAGS, 6)
+#define FLAG_S GETBIT(FLAGS, 7)
+#define FLAG_T GETBIT(FLAGS, 8)
+#define FLAG_I GETBIT(FLAGS, 9)
+#define FLAG_D GETBIT(FLAGS, 10)
+#define FLAG_O GETBIT(FLAGS, 11)
 
 /*
  * memory
@@ -103,7 +114,21 @@ struct
 	u8 mem[0xA0000];
 
 	/* registers */
-	u16 regs[14];
+	u8 regs[28];
 
 } v8086;
 
+/*
+ * main
+ */
+
+int main(int argc, char **argv)
+{
+	memset(&v8086, 0, sizeof(v8086));
+	REG_DX = 16;
+	printf("dx: %d\n", REG_DX);
+	REG_DH = 19;
+	REG_DL = 8;
+	printf("dh: %d\ndl: %d\n", REG_DH, REG_DL);
+	return 0;
+}

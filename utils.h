@@ -42,7 +42,10 @@ SOFTWARE.
  */
 
 /* get specific bit from integer */
-#define BIT(i, b) (((i) & (1 << (b))) >> (b))
+#define GETBIT(i, b) (((i) & (1 << (b))) >> (b))
+
+/* set specific bit from integer */
+#define SETBIT(i, b, v) ((v) ? ((i) |= (1 << (b))) : (i) &= ~(1 << (b)))
 
 /*
  * function declarations
