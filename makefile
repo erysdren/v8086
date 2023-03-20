@@ -40,7 +40,7 @@
 SRC_C = v8086_memory.c utils.c
 SRC_ASM = hello.asm
 
-CFLAGS += -std=c89 -pedantic
+CFLAGS += -std=c89 -Wall -pedantic
 
 all: clean v8086 hello.com
 
