@@ -33,7 +33,7 @@
 #define REG_PC (v8080.registers.pc)
 #define REG_FLAGS (v8080.registers.flags)
 
-#define SET_B(x) (REG_BC | (((uint8_t)(x)) & 0xFF00))
+#define SET_B(x) (REG_BC | ((((uint8_t)(x)) << 8) & 0xFF00))
 
 /*
  *
@@ -83,7 +83,8 @@ void nop() { return; }
 void lxibd16() { printf("oopsie"); }
 void staxb() { REG_BC = REG_A; }
 void inxb() { REG_BC += 1; }
-void inrb() { REG_BC | (((uint8_t)1) & 0xFF00); }
+void inrb() { SET_B(REG_B + 1); }
+void dcrb() { SET_B(REG_B - 1); }
 
 /*
  * opcode functions table
@@ -95,7 +96,8 @@ v8080_opcode_func_t opcode_funcs[256] =
 	lxibd16,
 	staxb,
 	inxb,
-	inrb
+	inrb,
+	dcrb
 };
 
 /*
